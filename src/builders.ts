@@ -1,9 +1,21 @@
-import { SwaggerParameterObject, } from "."
-import { SwaggerSchemaObject, } from "./swagger"
+import { SwaggerSchemaObjectProperties } from "."
+import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerParameterTypes, SwaggerParameterFormats } from "./swagger"
+
+const formatToType = {
+  'int32': 'integer',
+  'int64': 'integer',
+  'float': 'number',
+  'double': 'number',
+  'byte': 'string',
+  'binary': 'string',
+  'date': 'string',
+  'date-time': 'string',
+  'password': 'string',
+}
 
 interface BuildPathParamsArgs {
   [key: string]: {
-    type: string
+    type: SwaggerParameterTypes
     description?: string
   }
 }
@@ -21,18 +33,51 @@ export const buildPathParams = (params: BuildPathParamsArgs): SwaggerParameterOb
     return results
 }
 
-interface BuildSchemaArgs {
-  [key: string]: string
+const lookupType = (key: string): { type: string, format: string } => {
+  const type = formatToType[key]
+  if (type) {
+    return {
+      type,
+      format: key,
+    }
+  }
+  return { type: key, format: null }
 }
 
-// Build a schema from a simple set of properties
-// "id": "string" will yeild an optional string property
-// "id": "string!" will yeild a required string property
-// Passing in an Array will yeild an array of the same type
+interface BuildQueryParamsArgs {
+  [key: string]: {
+    type: string
+    format?: string
+    required?: boolean
+  }
+}
+
+export const buildQueryParams = (params: BuildQueryParamsArgs): SwaggerParameterObject[] => {
+  const results: SwaggerParameterObject[] = []
+  Object.keys(params).forEach(key => {
+    const obj = params[key]
+    const paramObj: SwaggerParameterObject = {
+      in: "query",
+      name: key,
+      type: obj.type,
+    }
+    Object.assign(paramObj, obj)
+    results.push(paramObj)
+  })
+  return results
+}
+
+// Allow for a required flag on a parameter and then build on the schema
+// with the required string[]
+interface BuildSchemaArgs {
+  [key: string]: SwaggerSchemaObjectProperties & {required?: boolean}
+}
+
+// Simply function to build a schema object
 export const buildSchema = (schema: BuildSchemaArgs | BuildSchemaArgs[]): SwaggerSchemaObject => {
     if (Array.isArray(schema)) {
         return {
-            type: "object",
+            type: "array",
             items: buildSchema(schema[0]),
         }
     }
@@ -40,18 +85,31 @@ export const buildSchema = (schema: BuildSchemaArgs | BuildSchemaArgs[]): Swagge
         type: "object",
         properties: {},
     }
+
     Object.keys(schema).forEach(key => {
-        if (schema[key].endsWith("!")) {
-            schemaObj.required = schemaObj.required || []
-            schemaObj.required.push(key)
-            schemaObj.properties[key] = {
-                type: schema[key].slice(0, -1),
-            }
-        } else {
-            schemaObj.properties[key] = {
-                type: schema[key],
-            }
-        }
+      schemaObj.required = schemaObj.required || []
+      let isRequired = false
+      if (schema[key].required) {
+        isRequired = schema[key].required
+        delete(schema[key].required)
+      }
+      schemaObj.properties[key] = schema[key]
+      if (isRequired) {
+        schemaObj.required.push(key)
+      }
     })
+    if (schemaObj.required && schemaObj.required.length === 0) {
+      delete(schemaObj.required) // Schema error if empty
+    }
     return schemaObj;
+}
+
+export const buildBodyParams = (name:string, schema: BuildSchemaArgs | BuildSchemaArgs[]): SwaggerParameterObject[] => {
+    return [
+        {
+            in: "body",
+            name: name || 'Request Body',
+            schema: buildSchema(schema),
+        },
+    ]
 }

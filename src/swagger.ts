@@ -1,3 +1,10 @@
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
+    Pick<T, Exclude<keyof T, Keys>>
+    & {
+        [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
+    }[Keys]
+
+
 export interface SwaggerObject {
     swagger: string
     info: SwaggerInfo
@@ -67,15 +74,29 @@ export interface SwaggerPath {
     [key: string]: SwaggerPathItemObject
 }
 
-export interface SwaggerPathItemObject {
-    [method: string]: SwaggerOperationObject
-    parameters?: SwaggerParameterObject | SwaggerReference
+type SwaggerPathItemObjectMethods = {
+  get?: SwaggerOperationObject
+  post?: SwaggerOperationObject
+  put?: SwaggerOperationObject
+  delete?: SwaggerOperationObject
+  options?: SwaggerOperationObject
+  head?: SwaggerOperationObject
+  patch?: SwaggerOperationObject
+  parameters?: SwaggerParameterObject | SwaggerReference
 }
+
+export type SwaggerPathItemObject = RequireAtLeastOne<SwaggerPathItemObjectMethods, 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch'>
+
+type SwaggerParameterInStrings = 'query' | 'header' | 'path' | 'cookie' | 'body'
+export type SwaggerParameterTypes = 'integer' | 'number' | 'string' | 'boolean' | 'array' | 'object' | 'file'
+export type SwaggerParameterFormats = 'int64' | 'int32' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password'
+
 
 export interface SwaggerParameterObject {
     name: string
-    in: string
+    in: SwaggerParameterInStrings
     type?: string
+    format?: string
     description?: string
     required?: boolean
     schema?: SwaggerSchemaObject 
@@ -85,10 +106,33 @@ export interface SwaggerSchemaObject {
     type?: string
     required?: string[]
     properties?: {
-        [key: string]: object
+        [key: string]: SwaggerSchemaObject | SwaggerSchemaObjectProperties
     }
     items?: SwaggerSchemaObject
     definitions?: SwaggerDefinitions
+}
+
+export interface SwaggerSchemaObjectProperties {
+  type: string
+  format?: string
+  title?: string
+  description?: string
+  default?: SwaggerSchemaObject
+  multipleOf?: number
+  maximum?: number
+  exclusiveMaximum?: number | boolean
+  minimum?: number
+  exclusiveMinimum?: number | boolean
+  maxLength?: number
+  minLength?: number
+  pattern?: string
+  maxItems?: number
+  minItems?: number
+  uniqueItems?: boolean
+  maxProperties?: number
+  minProperties?: number
+  properties?: SwaggerSchemaObject
+  enum?: string[] | number[] | boolean[]
 }
 
 export interface SwaggerOperationObject {

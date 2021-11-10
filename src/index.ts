@@ -8,6 +8,21 @@ export * from "./builders"
 export * from "./defaults"
 export * from "./responses"
 
+
+class DuplicateOperationIdError extends Error {
+  constructor(key: string) {
+    super(`OperationId '${key}' already exists`);
+    this.name = "DuplicateOperationIdError";
+  }
+}
+
+class DuplicateSecurityPolicyError extends Error {
+  constructor(key: string) {
+    super(`Security policy '${key}' already exists`);
+    this.name = "DuplicateSecurityPolicyError";
+  }
+}
+
 export interface SwaggerBuilderDefinition {
   swagger?: string
   info: {
@@ -57,7 +72,7 @@ export default class SwaggerBuilder {
 
     addSecurityPolicy(key: string, securityPolicy: SecuritySchemeObject) {
         if (this.swaggerSecurityDefinitions.includes(key)) {
-            throw new Error(`Security policy ${key} already exists`)
+            throw new DuplicateSecurityPolicyError(key)
         }
         this.swaggerDoc.securityDefinitions = this.swaggerDoc.securityDefinitions ?? {}
         this.swaggerDoc.securityDefinitions[key] = securityPolicy
@@ -72,7 +87,7 @@ export default class SwaggerBuilder {
         const method = Object.keys(pathObject)[0]
         const operationId = pathObject[method].operationId ?? `${method}_${path}`
         if (this.swaggerOperationIds.includes(operationId)) {
-            throw new Error(`OperationId ${operationId} already exists`)
+            throw new DuplicateOperationIdError(operationId)
         }
         this.swaggerDoc.paths = {
             ...this.swaggerDoc.paths,

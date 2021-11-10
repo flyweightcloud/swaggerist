@@ -1,6 +1,6 @@
 import * as SwaggerParser  from "@apidevtools/swagger-parser"
 
-import SwaggerBuilder, { buildPathParams, buildSchema, Responses, SwaggerBuilderDefinition, SwaggerSecuritySchemes, } from "../src/index"
+import SwaggerBuilder, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerBuilderDefinition, SwaggerSecuritySchemes, } from "../src/index"
 import { traverseAndReplace, } from "../src/utils"
 
 const testSwaggerOptions: SwaggerBuilderDefinition = {
@@ -23,20 +23,53 @@ describe("Basic swagger builder functionality", () => {
         swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
 
         swagger.addPath("/test/{id}", {
-            get: {
-                operationId: "test",
-                parameters: [ ...buildPathParams({id: {type: "string", description: "userId",},}), ],
-                responses: {
-                    "200": Responses.Success(buildSchema({ id: "string", })),
-                    "401": Responses.Unauthorized,
-                },
+          get: {
+            operationId: "test",
+            parameters: [...buildPathParams({ id: { type: "string", description: "userId" }}), ...buildBodyParams('user', {userId: {type: "string", description: "userId"}})],
+            responses: {
+              "200": Responses.Success(buildSchema({
+                id: { type: 'string', description: 'The ID of the user' },
+                name: { type: 'string', description: 'The name of the user' },
+              })),
             },
+          },
         })
         console.log(JSON.stringify(swagger.generate({schema: "https",}), null, 2))
         await SwaggerParser.validate(swagger.generate({schema: "https",}) as string)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
-    test.todo("Should throw errors on colliding operationIds")
+    test("Should throw errors on colliding operationIds", () => {
+        const swagger = new SwaggerBuilder(testSwaggerOptions)
+        swagger.addPath("/test/{id}", {
+            get: {
+                operationId: "test",
+                parameters: [ ...buildPathParams({id: {type: "string", description: "userId",},}), ],
+                responses: {
+                    "200": Responses.Success(buildSchema({
+                      id: {type: 'string', description: 'The ID of the user'},
+                      name: {type: 'string', description: 'The name of the user'},
+                    })),
+                },
+            },
+        })
+
+        try {
+          swagger.addPath("/test2/{id}", {
+              get: {
+                  operationId: "test",
+                  parameters: [ ...buildPathParams({id: {type: "string", description: "userId",},}), ],
+                  responses: {
+                    "200": Responses.Success(buildSchema({
+                      id: {type: 'string', description: 'The ID of the user'},
+                      name: {type: 'string', description: 'The name of the user'},
+                    })),
+                  },
+              },
+          })
+        } catch (e) {
+            expect(e.message).toBe("OperationId 'test' already exists")
+        }
+    })
 
 })
 

@@ -4,7 +4,7 @@
 
 type Replaceable = object | string | number | boolean | Replaceable[]
 
-const replaceText = (text: string | number, replacements: [RegExp, string][]): string | number => {
+const replaceText = (text: string, replacements: [RegExp, string][]): string => {
     if (typeof text !== "string") {
         return text
     }
@@ -19,9 +19,9 @@ const recursiveReplace = (objSrc: Replaceable, replacements: [RegExp, string][],
 
     if (Array.isArray(objSrc)) {
         return objSrc.map((item) => recursiveReplace(item, replacements))
-    } else if (typeof objSrc === 'string' || typeof objSrc === 'number') {
+    } else if (typeof objSrc === 'string') {
         return replaceText(objSrc, replacements)
-    } else if (typeof objSrc !== 'object') {
+    } else if (typeof objSrc !== 'object') { // number, bigint, undefined, null, boolean
       return objSrc
     }
 
