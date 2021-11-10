@@ -14,7 +14,7 @@ export interface SwaggerObject {
 }
 
 export interface SwaggerDefinitions {
-    [key: string]: any,
+    [key: string]: object,
 }
 
 export interface Security {
@@ -85,10 +85,10 @@ export interface SwaggerSchemaObject {
     type?: string
     required?: string[]
     properties?: {
-        [key: string]: any
+        [key: string]: object
     }
     items?: SwaggerSchemaObject
-    definitions?: any
+    definitions?: SwaggerDefinitions
 }
 
 export interface SwaggerOperationObject {
