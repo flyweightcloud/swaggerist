@@ -2,7 +2,7 @@
 // with the given values.
 // Example: findAndReplaceObject({host: "$$HOST$$"}, {host: "localhost"})
 
-type Replaceable = object | string | number | Replaceable[]
+type Replaceable = object | string | number | boolean | Replaceable[]
 
 const replaceText = (text: string | number, replacements: [RegExp, string][]): string | number => {
     if (typeof text !== "string") {
@@ -19,8 +19,10 @@ const recursiveReplace = (objSrc: Replaceable, replacements: [RegExp, string][],
 
     if (Array.isArray(objSrc)) {
         return objSrc.map((item) => recursiveReplace(item, replacements))
-    } else if (typeof objSrc !== "object") {
+    } else if (typeof objSrc === 'string' || typeof objSrc === 'number') {
         return replaceText(objSrc, replacements)
+    } else if (typeof objSrc !== 'object') {
+      return objSrc
     }
 
     Object.keys(objSrc).forEach(key => {
