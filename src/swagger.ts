@@ -52,12 +52,12 @@ export interface SwaggerInfo {
     termsofservice?: string
     license?: {
         name: string
-        url: string
+        url?: string
     }
     contact?: {
-        name: string
-        url: string
-        email: string
+        name?: string
+        url?: string
+        email?: string
     }
 }
 

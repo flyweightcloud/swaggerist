@@ -1,4 +1,4 @@
-import { traverseAndReplace } from "../src/utils"
+import { traverseAndReplace, } from "../src/utils"
 
 describe("Utility functions", () => {
     const testTree = {

@@ -1,4 +1,4 @@
-import { DefaultResponses, DefaultSchemas, } from "./defaults"
+import { buildStandardSwagger, SwaggerBuilderDefinition, } from "./builders"
 import { SecuritySchemeObject, SwaggerObject, SwaggerPathItemObject, } from "./swagger"
 import { traverseAndReplace, } from "./utils"
 
@@ -23,49 +23,19 @@ class DuplicateSecurityPolicyError extends Error {
     }
 }
 
-export interface SwaggerBuilderDefinition {
-  swagger?: string
-  info: {
-    title: string
-    description?: string
-    version: string
-    contact?: {
-      name: string
-      url?: string
-      email?: string
-    }
-  }
-  host?: string
-  basePath?: string
-  schemes?: string[]
-}
-
-const buildMininumViableSwagger = (definition: SwaggerBuilderDefinition): SwaggerObject => {
-    return ({
-        swagger: definition.swagger ?? "2.0",
-        info: {
-            title: definition.info.title,
-            description: definition.info.description ?? definition.info.title,
-            version: definition.info.version ?? "1.0.0",
-        },
-        schemes: definition.schemes ?? ["$$SCHEMA$$",],
-        host: definition.host ?? "$$HOST$$",
-        basePath: definition.basePath ?? "/",
-        paths: {},
-        definitions: DefaultSchemas,
-        responses: DefaultResponses,
-    })
-}
-
-export default class SwaggerBuilder {
+export default class Swaggerist {
 
     swaggerDoc: SwaggerObject
     swaggerSecurityDefinitions: string[]
     swaggerOperationIds: string[]
 
+    // Give us an easy place to start
+    public static create(def: SwaggerBuilderDefinition): Swaggerist {
+        return new Swaggerist(buildStandardSwagger(def))
+    }
 
-    constructor(definition: SwaggerBuilderDefinition) {
-        this.swaggerDoc = buildMininumViableSwagger(definition)
+    constructor(definition: SwaggerObject) {
+        this.swaggerDoc = definition
         this.swaggerOperationIds = []
         this.swaggerSecurityDefinitions = []
     }

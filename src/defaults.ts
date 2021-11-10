@@ -15,26 +15,31 @@ export const DefaultSchemas = {
 export const DefaultResponses = {
     BadRequest: {
         description: "BadRequest",
-        schema: {
-            "$ref": "#/definitions/SchemaError",
-        },
+        schema: DefaultSchemas.SchemaError,
     },
     Unauthorized: {
         description: "Unauthorized",
-        schema: {
-            "$ref": "#/definitions/SchemaError",
-        },
+        schema: DefaultSchemas.SchemaError,
     },
     NotFound: {
         description: "Not Found",
-        schema: {
-            "$ref": "#/definitions/SchemaError",
-        },
+        schema: DefaultSchemas.SchemaError,
     },
     ServerError: {
         description: "Server Error",
-        schema: {
-            "$ref": "#/definitions/SchemaError",
-        },
+        schema: DefaultSchemas.SchemaError,
     },
+}
+
+export const DefaultSwagger = {
+    swagger: "2.0",
+    info: {
+        title: "Swagger API Defintition",
+        description: "A swagger API (who's description probably should be changed)",
+        version: "1.0.0",
+    },
+    schemes: ["$$SCHEME$$",],
+    host: "$$HOST$$",
+    basePath: "/",
+    paths: {},
 }

@@ -1,8 +1,8 @@
 import * as SwaggerParser  from "@apidevtools/swagger-parser"
 
-import SwaggerBuilder, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerBuilderDefinition, SwaggerSecuritySchemes, } from "../src/index"
+import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes, } from "../src/index"
 
-const testSwaggerOptions: SwaggerBuilderDefinition = {
+const testSwaggerOptions = {
     info: {
         title: "Test Swagger",
         description: "Test Swagger Description",
@@ -12,13 +12,13 @@ const testSwaggerOptions: SwaggerBuilderDefinition = {
 
 describe("Basic swagger builder functionality", () => {
     test("should just work", async () => {
-        const swagger = new SwaggerBuilder(testSwaggerOptions)
-        await SwaggerParser.validate(swagger.generate({schema:"https",}) as string)
+        const swagger = Swaggerist.create(testSwaggerOptions)
+        await SwaggerParser.validate(swagger.generate({scheme:"https",}) as string)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
     test("should allow us to add paths", async () => {
-        const swagger = new SwaggerBuilder(testSwaggerOptions)
+        const swagger = Swaggerist.create(testSwaggerOptions)
         swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
 
         swagger.addPath("/test/{id}", {
@@ -33,11 +33,12 @@ describe("Basic swagger builder functionality", () => {
                 },
             },
         })
-        await SwaggerParser.validate(swagger.generate({schema: "https",}) as string)
+        await SwaggerParser.validate(swagger.generate({scheme: "https",}) as string)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
+
     test("Should throw errors on colliding operationIds", () => {
-        const swagger = new SwaggerBuilder(testSwaggerOptions)
+        const swagger = Swaggerist.create(testSwaggerOptions)
         swagger.addPath("/test/{id}", {
             get: {
                 operationId: "test",

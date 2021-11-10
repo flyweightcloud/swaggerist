@@ -1,5 +1,5 @@
-import { SwaggerSchemaObjectProperties, } from "."
-import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerParameterTypes, } from "./swagger"
+import { DefaultSwagger, SwaggerSchemaObjectProperties, } from "."
+import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerParameterTypes, SwaggerObject, } from "./swagger"
 interface BuildPathParamsArgs {
   [key: string]: {
     type: SwaggerParameterTypes
@@ -87,4 +87,28 @@ export const buildBodyParams = (name:string, schema: BuildSchemaArgs | BuildSche
             schema: buildSchema(schema),
         },
     ]
+}
+export interface SwaggerBuilderDefinition {
+  info: {
+    title: string
+    description?: string
+    version: string
+    contact?: {
+      name?: string
+      url?: string
+      email?: string
+    }
+    license?: {
+      name: string
+      url?: string
+    }
+  }
+  host?: string
+  basePath?: string
+  schemes?: string[]
+}
+
+export const buildStandardSwagger = (definition: SwaggerBuilderDefinition): SwaggerObject => {
+    const swagger: SwaggerObject = Object.assign({}, DefaultSwagger, definition)
+    return swagger
 }
