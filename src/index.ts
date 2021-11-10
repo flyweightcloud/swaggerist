@@ -10,17 +10,17 @@ export * from "./responses"
 
 
 class DuplicateOperationIdError extends Error {
-  constructor(key: string) {
-    super(`OperationId '${key}' already exists`);
-    this.name = "DuplicateOperationIdError";
-  }
+    constructor(key: string) {
+        super(`OperationId '${key}' already exists`);
+        this.name = "DuplicateOperationIdError";
+    }
 }
 
 class DuplicateSecurityPolicyError extends Error {
-  constructor(key: string) {
-    super(`Security policy '${key}' already exists`);
-    this.name = "DuplicateSecurityPolicyError";
-  }
+    constructor(key: string) {
+        super(`Security policy '${key}' already exists`);
+        this.name = "DuplicateSecurityPolicyError";
+    }
 }
 
 export interface SwaggerBuilderDefinition {

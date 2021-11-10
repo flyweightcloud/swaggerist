@@ -19,10 +19,10 @@ const recursiveReplace = (objSrc: Replaceable, replacements: [RegExp, string][],
 
     if (Array.isArray(objSrc)) {
         return objSrc.map((item) => recursiveReplace(item, replacements))
-    } else if (typeof objSrc === 'string') {
+    } else if (typeof objSrc === "string") {
         return replaceText(objSrc, replacements)
-    } else if (typeof objSrc !== 'object') { // number, bigint, undefined, null, boolean
-      return objSrc
+    } else if (typeof objSrc !== "object") { // number, bigint, undefined, null, boolean
+        return objSrc
     }
 
     Object.keys(objSrc).forEach(key => {

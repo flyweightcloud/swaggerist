@@ -85,11 +85,11 @@ type SwaggerPathItemObjectMethods = {
   parameters?: SwaggerParameterObject | SwaggerReference
 }
 
-export type SwaggerPathItemObject = RequireAtLeastOne<SwaggerPathItemObjectMethods, 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch'>
+export type SwaggerPathItemObject = RequireAtLeastOne<SwaggerPathItemObjectMethods, "get" | "post" | "put" | "delete" | "options" | "head" | "patch">
 
-type SwaggerParameterInStrings = 'query' | 'header' | 'path' | 'cookie' | 'body'
-export type SwaggerParameterTypes = 'integer' | 'number' | 'string' | 'boolean' | 'array' | 'object' | 'file'
-export type SwaggerParameterFormats = 'int64' | 'int32' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password'
+type SwaggerParameterInStrings = "query" | "header" | "path" | "cookie" | "body"
+export type SwaggerParameterTypes = "integer" | "number" | "string" | "boolean" | "array" | "object" | "file"
+export type SwaggerParameterFormats = "int64" | "int32" | "float" | "double" | "byte" | "binary" | "date" | "date-time" | "password"
 
 
 export interface SwaggerParameterObject {
