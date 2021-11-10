@@ -45,7 +45,7 @@ swagger.addPath("$$BASE_PATH$$/user", {
 })
 
 swagger.addPath("$$BASE_PATH$$/user/{id}", {
-  post: {
+  get: {
     operationId: "get_user",
     parameters: [...buildPathParams(
       {
@@ -133,7 +133,7 @@ Outputs:
       }
     },
     "/api/my_az_function/user/{id}": {
-      "post": {
+      "get": {
         "operationId": "get_user",
         "parameters": [
           {

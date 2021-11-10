@@ -32,7 +32,7 @@ swagger.addPath("$$BASE_PATH$$/user", {
 })
 
 swagger.addPath("$$BASE_PATH$$/user/{id}", {
-    post: {
+    get: {
         operationId: "get_user",
         parameters: [...buildPathParams(
             {
