@@ -10,7 +10,7 @@ for JSON API's.
 
 Simple example of a Swagger definition for an authenticated Azure Function API:
 
-```
+```typescript
 import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes } from "@flyweight.cloud/swaggerist"
 
 const swaggerDetails = {
@@ -74,7 +74,7 @@ console.log(
 
 Outputs:
 
-```
+```json
 {
   "swagger": "2.0",
   "info": {
