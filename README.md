@@ -1,7 +1,15 @@
 # Swaggerist
 
+[![Tests](https://github.com/flyweightcloud/swaggerist/actions/workflows/test.yml/badge.svg)](https://github.com/flyweightcloud/swaggerist/actions/workflows/test.yml)
+
 Swaggerist is an opinionated and programmatic way to quickly build Swagger definitions
-for JSON API's.
+for JSON API's. (Targetting Azure at the moment, so Swagger 2.0)
+
+## Why do it this way
+
+Instead of trying to build a DSL or abstraction on top of Swagger, this library
+conforms to the Swagger definition and simply provides helpers to make some
+common tasks more concise.
 
 ## Usage
 
