@@ -38,7 +38,7 @@ export const DefaultSwagger = {
         description: "A swagger API (who's description probably should be changed)",
         version: "1.0.0",
     },
-    schemes: ["$$SCHEME$$",],
+    schemes: ["$$SCHEME$$"],
     host: "$$HOST$$",
     basePath: "/",
     paths: {},

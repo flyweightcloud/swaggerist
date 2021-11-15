@@ -2,20 +2,22 @@
 // with the given values.
 // Example: findAndReplaceObject({host: "$$HOST$$"}, {host: "localhost"})
 
-type Replaceable = object | string | number | boolean | Replaceable[]
+type AnyJson =  boolean | number | string | null | JsonArray | JsonMap;
+interface JsonMap {  [key: string]: AnyJson; }
+type JsonArray = Array<AnyJson>
 
 const replaceText = (text: string, replacements: [RegExp, string][]): string => {
     if (typeof text !== "string") {
         return text
     }
     let out  = `${text}`
-    replacements.forEach(([regex, replacement,]) => {
+    replacements.forEach(([regex, replacement]) => {
         out = out.replace(regex, replacement);
     })
     return out
 }
 
-const recursiveReplace = (objSrc: Replaceable, replacements: [RegExp, string][], objTarget = {}): Replaceable => {
+const recursiveReplace = (objSrc: AnyJson, replacements: [RegExp, string][], objTarget = {}): AnyJson => {
 
     if (Array.isArray(objSrc)) {
         return objSrc.map((item) => recursiveReplace(item, replacements))
@@ -31,10 +33,12 @@ const recursiveReplace = (objSrc: Replaceable, replacements: [RegExp, string][],
     return objTarget
 }
 
-export const traverseAndReplace = (objSrc, replacements: object): Replaceable => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const traverseAndReplace = (objSrc: any, replacements: {[key: string]: string}): AnyJson => {
     const replacementList = []
     for (const key in replacements) {
-        replacementList.push([new RegExp(`\\$\\$${key.toUpperCase()}\\$\\$`, "g"), replacements[key],])
+        const tag = key.replace(/([A-Z])/g, "_$1").toUpperCase()
+        replacementList.push([new RegExp(`\\$\\$${tag}\\$\\$`, "g"), replacements[key]])
     }
     return recursiveReplace(objSrc, replacementList, {})
 }

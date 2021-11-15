@@ -1,6 +1,6 @@
 // Allow for easier setup of security policies in swagger
 
-import { SecuritySchemeObject,} from "./swagger"
+import { SecuritySchemeObject} from "./swagger"
 
 export const SwaggerSecuritySchemes = {
 

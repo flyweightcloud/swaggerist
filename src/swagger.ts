@@ -5,7 +5,7 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
     }[Keys]
 
 
-export interface SwaggerObject {
+export type SwaggerObject = {
     swagger: string
     info: SwaggerInfo
     host: string
@@ -20,19 +20,19 @@ export interface SwaggerObject {
     responses?: SwaggerResponses
 }
 
-export interface SwaggerDefinitions {
+export type SwaggerDefinitions = {
     [key: string]: object,
 }
 
-export interface Security {
+export type Security = {
     [key: string]: string[] | []
 }
 
-export interface SecurityDefinitions {
+export type SecurityDefinitions = {
     [name: string]: SecuritySchemeObject
 }
 
-export interface SecuritySchemeObject {
+export type SecuritySchemeObject = {
     type: string
     description?: string
     name?: string
@@ -45,7 +45,7 @@ export interface SecuritySchemeObject {
     }
 }
 
-export interface SwaggerInfo {
+export type SwaggerInfo = {
     title: string
     version: string
     description?: string
@@ -61,16 +61,16 @@ export interface SwaggerInfo {
     }
 }
 
-export interface SwaggerReference {
+export type SwaggerReference = {
     [ref: string]: string
 }
 
-export interface SwaggerExternalDocumentation {
+export type SwaggerExternalDocumentation = {
     url: string
     description?: string
 }
 
-export interface SwaggerPath {
+export type SwaggerPath = {
     [key: string]: SwaggerPathItemObject
 }
 
@@ -92,7 +92,7 @@ export type SwaggerParameterTypes = "integer" | "number" | "string" | "boolean" 
 export type SwaggerParameterFormats = "int64" | "int32" | "float" | "double" | "byte" | "binary" | "date" | "date-time" | "password"
 
 
-export interface SwaggerParameterObject {
+export type SwaggerParameterObject = {
     name: string
     in: SwaggerParameterInStrings
     type?: string
@@ -102,7 +102,7 @@ export interface SwaggerParameterObject {
     schema?: SwaggerSchemaObject 
 }
 
-export interface SwaggerSchemaObject {
+export type SwaggerSchemaObject = {
     type?: string
     required?: string[]
     properties?: {
@@ -112,7 +112,7 @@ export interface SwaggerSchemaObject {
     definitions?: SwaggerDefinitions
 }
 
-export interface SwaggerSchemaObjectProperties {
+export type SwaggerSchemaObjectProperties = {
   type: string
   format?: string
   title?: string
@@ -135,7 +135,7 @@ export interface SwaggerSchemaObjectProperties {
   enum?: string[] | number[] | boolean[]
 }
 
-export interface SwaggerOperationObject {
+export type SwaggerOperationObject = {
         description?: string
         summary?: string
         tags?: string[]
@@ -149,24 +149,24 @@ export interface SwaggerOperationObject {
         responses?: SwaggerResponses
 }
 
-export interface SwaggerResponseObject {
+export type SwaggerResponseObject = {
   description?: string
   schema?: SwaggerSchemaObject | SwaggerReference
   headers?: SwaggerHeadersObject
   examples?: SwaggerExamplesObject
 }
 
-export interface SwaggerResponses {
+export type SwaggerResponses = {
     [statusCode: string | number]: SwaggerReference | SwaggerResponseObject
 }
 
-export interface SwaggerHeadersObject {
+export type SwaggerHeadersObject = {
     [name: string]: {
         [key: string]: string
     }
 }
 
-export interface SwaggerExamplesObject {
+export type SwaggerExamplesObject = {
     [mimetype: string]: {
         [key: string]: string
     }

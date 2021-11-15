@@ -1,4 +1,4 @@
-import { traverseAndReplace, } from "../src/utils"
+import { traverseAndReplace } from "../src/utils"
 
 describe("Utility functions", () => {
     const testTree = {
@@ -18,17 +18,19 @@ describe("Utility functions", () => {
         },
         200: {
             foo: "$$FOO$$",
+            snake: "$$SNAKE_CASE$$"
         },
 
     }
 
     test("tree find and replace should work", async () => {
-        const test = traverseAndReplace(testTree, {"host": "localhost", foo: "baz",}) as object
+        const test = traverseAndReplace(testTree, {"host": "localhost", foo: "baz", snakeCase: "bar"}) as object
         expect(test["url"]).toBe("https://localhost/path")
         expect(test["baz_get"]).toBe("get_baz")
         expect(test["nested"]["baz_post"]).toBe("post_baz")
         expect(test["nested"]["arr"][0]).toBe("bazArray")
         expect(test["nested"]["arr"][1]).toBe("bazArray")
         expect(test["nested"]["arrOfObj_baz"][0]["baz_put"]).toBe("put_baz")
+        expect(test["200"]["snake"]).toBe("bar")
     })
 })

@@ -1,4 +1,4 @@
-import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes, } from "../src"
+import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes } from "../src"
 
 const swaggerDetails = {
     info: {
@@ -18,13 +18,13 @@ swagger.addPath("$$BASE_PATH$$/user", {
         operationId: "create_user",
         parameters: [...buildBodyParams("user",
             {
-                name: { type: "string", description: "Users Name", required: true, },
-                email: { type: "string", description: "Users Email", },
+                name: { type: "string", description: "Users Name", required: true },
+                email: { type: "string", description: "Users Email" },
             }),
         ],
         responses: {
             "200": Responses.Success(buildSchema({
-                id: { type: "string", description: "The ID of the user", },
+                id: { type: "string", description: "The ID of the user" },
             })),
             "500": Responses.ServerError,
         },
@@ -36,14 +36,14 @@ swagger.addPath("$$BASE_PATH$$/user/{id}", {
         operationId: "get_user",
         parameters: [...buildPathParams(
             {
-                id: { type: "string", description: "Users Id", },
+                id: { type: "string", description: "Users Id" },
             }),
         ],
         responses: {
             "200": Responses.Success(buildSchema({
-                id: { type: "string", description: "The ID of the user", },
-                name: { type: "string", description: "The name of the user", },
-                email: { type: "string", description: "The email of the user", },
+                id: { type: "string", description: "The ID of the user" },
+                name: { type: "string", description: "The name of the user" },
+                email: { type: "string", description: "The email of the user" },
             })),
             "404": Responses.NotFound,
         },
@@ -52,7 +52,7 @@ swagger.addPath("$$BASE_PATH$$/user/{id}", {
 
 console.log(
     JSON.stringify(
-        swagger.generate({ scheme: "https", host: "localhost", base_path: "/api/my_az_function", }),
+        swagger.generate({ scheme: "https", host: "localhost", base_path: "/api/my_az_function" }),
         null, 2
     )
 )

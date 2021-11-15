@@ -1,6 +1,7 @@
-import * as SwaggerParser  from "@apidevtools/swagger-parser"
+import * as SwaggerParser from "@apidevtools/swagger-parser"
+import { OpenAPI } from "openapi-types"
 
-import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes, } from "../src/index"
+import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes } from "../src/index"
 
 const testSwaggerOptions = {
     info: {
@@ -13,7 +14,7 @@ const testSwaggerOptions = {
 describe("Basic swagger builder functionality", () => {
     test("should just work", async () => {
         const swagger = Swaggerist.create(testSwaggerOptions)
-        await SwaggerParser.validate(swagger.generate({scheme:"https",}) as string)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
@@ -24,16 +25,16 @@ describe("Basic swagger builder functionality", () => {
         swagger.addPath("/test/{id}", {
             get: {
                 operationId: "test",
-                parameters: [...buildPathParams({ id: { type: "string", description: "userId", },}), ...buildBodyParams("user", {userId: {type: "string", description: "userId",},}),],
+                parameters: [...buildPathParams({ id: { type: "string", description: "userId" }}), ...buildBodyParams("user", {userId: {type: "string", description: "userId"}})],
                 responses: {
                     "200": Responses.Success(buildSchema({
-                        id: { type: "string", description: "The ID of the user", },
-                        name: { type: "string", description: "The name of the user", },
+                        id: { type: "string", description: "The ID of the user" },
+                        name: { type: "string", description: "The name of the user" },
                     })),
                 },
             },
         })
-        await SwaggerParser.validate(swagger.generate({scheme: "https",}) as string)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
@@ -42,11 +43,11 @@ describe("Basic swagger builder functionality", () => {
         swagger.addPath("/test/{id}", {
             get: {
                 operationId: "test",
-                parameters: [ ...buildPathParams({id: {type: "string", description: "userId",},}), ],
+                parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                 responses: {
                     "200": Responses.Success(buildSchema({
-                        id: {type: "string", description: "The ID of the user",},
-                        name: {type: "string", description: "The name of the user",},
+                        id: {type: "string", description: "The ID of the user"},
+                        name: {type: "string", description: "The name of the user"},
                     })),
                 },
             },
@@ -56,11 +57,11 @@ describe("Basic swagger builder functionality", () => {
             swagger.addPath("/test2/{id}", {
                 get: {
                     operationId: "test",
-                    parameters: [ ...buildPathParams({id: {type: "string", description: "userId",},}), ],
+                    parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                     responses: {
                         "200": Responses.Success(buildSchema({
-                            id: {type: "string", description: "The ID of the user",},
-                            name: {type: "string", description: "The name of the user",},
+                            id: {type: "string", description: "The ID of the user"},
+                            name: {type: "string", description: "The name of the user"},
                         })),
                     },
                 },
