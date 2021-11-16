@@ -11,11 +11,11 @@ const extractExample = (val: object): object => {
         const result: object = {}
         Object.keys(val).forEach(key => {
             if (key.startsWith("$")) {
-                const example = val[key]['example']
+                const example = val[key]["example"]
                 if (!example) {
-                  throw new Error(`No example found for ${key}`)
+                    throw new Error(`No example found for ${key}`)
                 }
-                result[key.slice(1)] = val[key]['example']
+                result[key.slice(1)] = val[key]["example"]
             } else {
                 result[key] = extractExample(val[key])
             }
@@ -74,9 +74,9 @@ export const convertJsonToSchema = (json: any, opts:{includeExample?: boolean}={
 
         Object.keys(json).forEach(key => {
             if (key.slice(0, 1) === "$") {
-              schema.properties[key.slice(1)] = overrideSchema(json[key])
+                schema.properties[key.slice(1)] = overrideSchema(json[key])
             } else {
-              schema.properties[key] = convertJsonToSchema(json[key])
+                schema.properties[key] = convertJsonToSchema(json[key])
             }
         })
         if (includeExample) {

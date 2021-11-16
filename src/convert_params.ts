@@ -1,6 +1,4 @@
-import { type } from "os"
 import { SwaggerParameterObject } from "."
-import { SwaggerSchemaObject, JSONSchemaObject } from "./swagger"
 import { valToType } from "./value_typer"
 
 type QuickParamsSchema = {
@@ -12,15 +10,15 @@ export const convertJsonToParams = (json: QuickParamsSchema ): SwaggerParameterO
     Object.keys(json).forEach(k => {
         const val = json[k]
         const param: SwaggerParameterObject = {
-          in: "query",
-          name: k,
+            in: "query",
+            name: k,
         }
         if (typeof val === "object") {
-          Object.assign(param, val)
+            Object.assign(param, val)
         } else {
-          const {type, format} =  valToType(val)
-          param.type = type
-          if (format) param.format = format
+            const {type, format} =  valToType(val)
+            param.type = type
+            if (format) param.format = format
         }
     })
     return params

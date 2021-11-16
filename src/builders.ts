@@ -1,4 +1,4 @@
-import { DefaultSwagger, JSONSchemaObject } from "."
+import { DefaultSwagger } from "."
 import { convertJsonToParams } from "./convert_params"
 import { convertJsonToSchema } from "./convert_schema"
 import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerTypes, SwaggerObject } from "./swagger"
@@ -21,18 +21,13 @@ export const buildPathParams = (params: BuildPathParamsArgs): SwaggerParameterOb
     })
     return results
 }
-interface BuildQueryParamsArgs {
-  [key: string]: {
-    type: string
-    format?: string
-    required?: boolean
-  }
-}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const queryParamBuilder = (paramsExample: any): SwaggerParameterObject[] => {
     return convertJsonToParams(paramsExample)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const schemaBuilder = (jsonExample: any): SwaggerSchemaObject => {
     return convertJsonToSchema(jsonExample)
 }

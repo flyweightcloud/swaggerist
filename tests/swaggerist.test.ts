@@ -13,19 +13,19 @@ const testSwaggerOptions = {
 
 describe("An ideal world", () => {
     const exampleQuery = {
-      id: 1234,
-      email: {
-        type: "string",
-      }
+        id: 1234,
+        email: {
+            type: "string",
+        }
     }
     const exampleResponse = {
-      id: 1234,
-      name: "John Doe",
-      $email: {
-        example: "john@yahoo.com",
-        type: "string",
-        description: "Email of the user",
-      }
+        id: 1234,
+        name: "John Doe",
+        $email: {
+            example: "john@yahoo.com",
+            type: "string",
+            description: "Email of the user",
+        }
     }
     test("where swagger just works", async () => {
         const swagger = Swaggerist.create(testSwaggerOptions)
