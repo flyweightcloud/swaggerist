@@ -36,6 +36,7 @@ describe("An ideal world", () => {
                 parameters: [ ...queryParamBuilder(exampleQuery) ],
                 responses: {
                     "200": Responses.Success(schemaBuilder(exampleResponse)),
+                    default: Responses.Error,
                 },
             },
         })

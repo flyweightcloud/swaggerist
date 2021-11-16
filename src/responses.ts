@@ -1,4 +1,4 @@
-import { SwaggerReference, SwaggerResponseObject, SwaggerSchemaObject, JSONSchemaObject } from ".";
+import { SwaggerReference, SwaggerResponseObject, SwaggerSchemaObject, JSONSchemaObject, DefaultResponses } from ".";
 
 export const Responses = {
     Success: (schema: SwaggerSchemaObject | JSONSchemaObject | SwaggerReference, description?: string): SwaggerResponseObject => {
@@ -7,8 +7,9 @@ export const Responses = {
             schema,
         };
     },
-    BadRequest: { "$ref": "#/responses/BadRequest" },
-    Unauthorized: { "$ref": "#/responses/Unauthorized" },
-    NotFound: { "$ref": "#/responses/NotFound" },
-    ServerError: { "$ref": "#/responses/ServerError" },
+    BadRequest: DefaultResponses.BadRequest,
+    Unauthorized: DefaultResponses.Unauthorized,
+    NotFound: DefaultResponses.NotFound,
+    ServerError: DefaultResponses.ServerError,
+    Error: DefaultResponses.ServerError,
 }
