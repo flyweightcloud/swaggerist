@@ -1,7 +1,7 @@
 import * as SwaggerParser from "@apidevtools/swagger-parser"
 import { OpenAPI } from "openapi-types"
 
-import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes } from "../src/index"
+import Swaggerist, { buildBodyParams, buildPathParams, Responses, SwaggerSecuritySchemes } from "../src/index"
 import { quickSchema } from "../src/quick_schema"
 
 const testSwaggerOptions = {
@@ -60,10 +60,10 @@ describe("Basic swagger builder functionality", () => {
                     operationId: "test",
                     parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                     responses: {
-                      "200": Responses.Success(quickSchema({
-                          id: 12345,
-                          name: "A Users Name"
-                      })),
+                        "200": Responses.Success(quickSchema({
+                            id: 12345,
+                            name: "A Users Name"
+                        })),
                     },
                 },
             })
