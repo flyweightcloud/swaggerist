@@ -159,7 +159,7 @@ export type SwaggerResponseObject = {
 }
 
 export type SwaggerResponses = {
-    [statusCode: string | number]: SwaggerReference | SwaggerResponseObject
+    [statusCode in string | number]: SwaggerReference | SwaggerResponseObject
 }
 
 export type SwaggerHeadersObject = {

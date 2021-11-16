@@ -19,7 +19,9 @@ export const convertJsonToParams = (json: QuickParamsSchema ): SwaggerParameterO
             const {type, format} =  valToType(val)
             param.type = type
             if (format) param.format = format
+            param.description = `${k} - Ex. '${val}'(${type})`
         }
+        params.push(param)
     })
     return params
 }

@@ -51,11 +51,11 @@ const overrideSchema = (val: QuickJSONSchema): JSONSchemaObject => {
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const convertJsonToSchema = (json: any, opts:{includeExample?: boolean}={}): SwaggerSchemaObject => {
-    const includeExample = opts.includeExample ? json : false
+    const includeExample = opts.includeExample ?? true
     if (Array.isArray(json)) {
         return {
             type: "array",
-            items: convertJsonToSchema(json[0]),
+            items: convertJsonToSchema(json[0], {includeExample: false}),
         }
     }
 
@@ -76,7 +76,7 @@ export const convertJsonToSchema = (json: any, opts:{includeExample?: boolean}={
             if (key.slice(0, 1) === "$") {
                 schema.properties[key.slice(1)] = overrideSchema(json[key])
             } else {
-                schema.properties[key] = convertJsonToSchema(json[key])
+                schema.properties[key] = convertJsonToSchema(json[key], {includeExample: false})
             }
         })
         if (includeExample) {
