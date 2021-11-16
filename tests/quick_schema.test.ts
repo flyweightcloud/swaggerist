@@ -2,7 +2,7 @@ import * as SwaggerParser from "@apidevtools/swagger-parser"
 import { OpenAPI } from "openapi-types"
 
 import Swaggerist, { Responses, SwaggerSchemaObject } from "../src/index"
-import { quickSchema } from "../src/quick_schema";
+import { convertJsonToSchema } from "../src/convert_schema";
 import * as response from "./fixtures/openweathermap_response.json"
 import * as expected from "./fixtures/openweathermap_expected.json"
 
@@ -17,7 +17,7 @@ const swagger = Swaggerist.create(testSwaggerOptions)
 
 describe("Conversion of Json to a schema object", () => {
     test("should work and include an example", async () => {
-        const swaggerSchema = quickSchema(response, { includeExample: true }) as SwaggerSchemaObject
+        const swaggerSchema = convertJsonToSchema(response, { includeExample: true }) as SwaggerSchemaObject
         expect(swaggerSchema).toStrictEqual(expected)
 
         swagger.addPath("/weather", {
@@ -29,7 +29,7 @@ describe("Conversion of Json to a schema object", () => {
     })
 
     test("should work and allow you to not include an example", async () => {
-        const swaggerSchema = quickSchema(response, { includeExample: false })
+        const swaggerSchema = convertJsonToSchema(response, { includeExample: false })
 
         expect(swaggerSchema.example).toBeUndefined
 
@@ -43,9 +43,12 @@ describe("Conversion of Json to a schema object", () => {
 
 })
 
-
-
 describe("Building a schema object", () => {
+    test("should take a json example and output a schema with an example", async () => {
+        const swaggerSchema = convertJsonToSchema(response, { includeExample: true })
+        expect(swaggerSchema).toStrictEqual(expected)
+    });
+
     test("should work and include an example", async () => {
         const user = {
             name: "Customer Name",
@@ -54,17 +57,19 @@ describe("Building a schema object", () => {
                 street: "123 Main Street",
                 city: "Anywhere",
                 state: "Nebraska",
-                zip: {
-                    $example: 12345,
-                    $type: "string",
-                    $description: "Zip code",
-                    $required: true,
+                // Allow for overriding with a preceding "$"
+                $zip: {
+                    example: 12345,
+                    type: "string",
+                    description: "Zip code",
+                    required: true,
                 }
             }
         }
-        const swaggerSchema = quickSchema(user, { includeExample: true })
-        console.log(JSON.stringify(swaggerSchema, null, 2))
-        expect(true).toBe(true)
+        const swaggerSchema = convertJsonToSchema(user, { includeExample: true })
+
+        // Should let us override any field with our own type and example
+        expect(swaggerSchema.properties.address.properties.zip.type).toBe("string")
 
     })
 })

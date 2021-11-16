@@ -1,8 +1,7 @@
 import * as SwaggerParser from "@apidevtools/swagger-parser"
 import { OpenAPI } from "openapi-types"
 
-import Swaggerist, { buildBodyParams, buildPathParams, Responses, SwaggerSecuritySchemes } from "../src/index"
-import { quickSchema } from "../src/quick_schema"
+import Swaggerist, { bodyParamBuilder, buildPathParams, queryParamBuilder, Responses, schemaBuilder, SwaggerSecuritySchemes } from "../src/index"
 
 const testSwaggerOptions = {
     info: {
@@ -11,6 +10,41 @@ const testSwaggerOptions = {
         version: "1.0.0",
     },
 }
+
+describe("An ideal world", () => {
+    const exampleQuery = {
+      id: 1234,
+      email: {
+        type: "string",
+      }
+    }
+    const exampleResponse = {
+      id: 1234,
+      name: "John Doe",
+      $email: {
+        example: "john@yahoo.com",
+        type: "string",
+        description: "Email of the user",
+      }
+    }
+    test("where swagger just works", async () => {
+        const swagger = Swaggerist.create(testSwaggerOptions)
+        swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
+        swagger.addPath("/user/find", {
+            get: {
+                operationId: "findUser",
+                parameters: [ ...queryParamBuilder(exampleQuery) ],
+                responses: {
+                    "200": Responses.Success(schemaBuilder(exampleResponse)),
+                },
+            },
+        })
+
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https"}) as object as OpenAPI.Document)
+        expect(true).toBe(true) // Swagger is valid if we get here
+    })
+});
+
 
 describe("Basic swagger builder functionality", () => {
     test("should just work", async () => {
@@ -26,9 +60,9 @@ describe("Basic swagger builder functionality", () => {
         swagger.addPath("/test/{id}", {
             post: {
                 operationId: "test",
-                parameters: [...buildPathParams({ id: { type: "string", description: "userId" }}), ...buildBodyParams("user", {userId: {type: "string", description: "userId"}})],
+                parameters: [...buildPathParams({ id: { type: "string", description: "userId" }}), ...bodyParamBuilder("user", {userId: {type: "string", description: "userId"}})],
                 responses: {
-                    "200": Responses.Success(quickSchema({
+                    "200": Responses.Success(schemaBuilder({
                         id: 12345,
                         name: "A Users Name"
                     })),
@@ -46,7 +80,7 @@ describe("Basic swagger builder functionality", () => {
                 operationId: "test",
                 parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                 responses: {
-                    "200": Responses.Success(quickSchema({
+                    "200": Responses.Success(schemaBuilder({
                         id: 12345,
                         name: "A Users Name"
                     })),
@@ -60,7 +94,7 @@ describe("Basic swagger builder functionality", () => {
                     operationId: "test",
                     parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                     responses: {
-                        "200": Responses.Success(quickSchema({
+                        "200": Responses.Success(schemaBuilder({
                             id: 12345,
                             name: "A Users Name"
                         })),

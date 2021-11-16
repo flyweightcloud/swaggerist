@@ -4,7 +4,7 @@ import { OpenAPI } from "openapi-types"
 import Swaggerist, { Responses } from "../src/index"
 import * as response from "./fixtures/openweathermap_response.json"
 import * as expected from "./fixtures/openweathermap_expected.json"
-import { quickSchema } from "../src/quick_schema"
+import { convertJsonToSchema } from "../src/convert_schema"
 
 const testSwaggerOptions = {
     info: {
@@ -17,7 +17,7 @@ const swagger = Swaggerist.create(testSwaggerOptions)
 
 describe("Conversion of Json to a schema object", () => {
     test("should work and include an example", async () => {
-        const swaggerSchema = quickSchema(response, { includeExample: true })
+        const swaggerSchema = convertJsonToSchema(response, { includeExample: true })
         expect(swaggerSchema).toStrictEqual(expected)
 
         swagger.addPath("/weather", {
@@ -29,7 +29,7 @@ describe("Conversion of Json to a schema object", () => {
     })
 
     test("should work and allow you to not include an example", async () => {
-        const swaggerSchema = quickSchema(response, { includeExample: false })
+        const swaggerSchema = convertJsonToSchema(response, { includeExample: false })
 
         expect(swaggerSchema.example).toBeUndefined
 
