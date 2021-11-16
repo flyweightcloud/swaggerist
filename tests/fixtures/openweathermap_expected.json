@@ -1,0 +1,188 @@
+{
+  "type": "object",
+  "properties": {
+    "coord": {
+      "type": "object",
+      "properties": {
+        "lon": {
+          "type": "number",
+          "format": "float"
+        },
+        "lat": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "weather": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "main": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "base": {
+      "type": "string"
+    },
+    "main": {
+      "type": "object",
+      "properties": {
+        "temp": {
+          "type": "number",
+          "format": "float"
+        },
+        "feels_like": {
+          "type": "number",
+          "format": "float"
+        },
+        "temp_min": {
+          "type": "number",
+          "format": "float"
+        },
+        "temp_max": {
+          "type": "number",
+          "format": "float"
+        },
+        "pressure": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "humidity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "visibility": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "wind": {
+      "type": "object",
+      "properties": {
+        "speed": {
+          "type": "number",
+          "format": "float"
+        },
+        "deg": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "clouds": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dt": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "sys": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "number",
+          "format": "float"
+        },
+        "country": {
+          "type": "string"
+        },
+        "sunrise": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sunset": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "timezone": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "id": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "name": {
+      "type": "string"
+    },
+    "cod": {
+      "type": "integer",
+      "format": "int32"
+    }
+  },
+  "example": {
+    "coord": {
+      "lon": -122.08,
+      "lat": 37.39
+    },
+    "weather": [
+      {
+        "id": 800,
+        "main": "Clear",
+        "description": "clear sky",
+        "icon": "01d"
+      }
+    ],
+    "base": "stations",
+    "main": {
+      "temp": 282.55,
+      "feels_like": 281.86,
+      "temp_min": 280.37,
+      "temp_max": 284.26,
+      "pressure": 1023,
+      "humidity": 100
+    },
+    "visibility": 16093,
+    "wind": {
+      "speed": 1.5,
+      "deg": 350
+    },
+    "clouds": {
+      "all": 1
+    },
+    "dt": 1560350645,
+    "sys": {
+      "type": 1,
+      "id": 5122,
+      "message": 0.0139,
+      "country": "US",
+      "sunrise": 1560343627,
+      "sunset": 1560396563
+    },
+    "timezone": -25200,
+    "id": 4200063530493,
+    "name": "Mountain View",
+    "cod": 200
+  }
+}

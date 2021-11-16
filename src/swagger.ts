@@ -88,36 +88,35 @@ type SwaggerPathItemObjectMethods = {
 export type SwaggerPathItemObject = RequireAtLeastOne<SwaggerPathItemObjectMethods, "get" | "post" | "put" | "delete" | "options" | "head" | "patch">
 
 type SwaggerParameterInStrings = "query" | "header" | "path" | "cookie" | "body"
-export type SwaggerParameterTypes = "integer" | "number" | "string" | "boolean" | "array" | "object" | "file"
-export type SwaggerParameterFormats = "int64" | "int32" | "float" | "double" | "byte" | "binary" | "date" | "date-time" | "password"
+export type SwaggerTypes = "integer" | "number" | "string" | "boolean" | "array" | "object" | "file"
+export type SwaggerFormats = "int64" | "int32" | "float" | "double" | "byte" | "binary" | "date" | "date-time" | "password"
 
 
 export type SwaggerParameterObject = {
     name: string
     in: SwaggerParameterInStrings
-    type?: string
-    format?: string
+    type?: SwaggerTypes
+    format?: SwaggerFormats
     description?: string
     required?: boolean
     schema?: SwaggerSchemaObject 
+    allowEmptyValue?: boolean
+
 }
 
 export type SwaggerSchemaObject = {
-    type?: string
     required?: string[]
-    properties?: {
-        [key: string]: SwaggerSchemaObject | SwaggerSchemaObjectProperties
-    }
-    items?: SwaggerSchemaObject
     definitions?: SwaggerDefinitions
-}
+    example?: object
+} & JSONSchemaObject
 
-export type SwaggerSchemaObjectProperties = {
+export type JSONSchemaObject = {
+
   type: string
   format?: string
   title?: string
   description?: string
-  default?: SwaggerSchemaObject
+  default?: JSONSchemaObject
   multipleOf?: number
   maximum?: number
   exclusiveMaximum?: number | boolean
@@ -131,8 +130,11 @@ export type SwaggerSchemaObjectProperties = {
   uniqueItems?: boolean
   maxProperties?: number
   minProperties?: number
-  properties?: SwaggerSchemaObject
   enum?: string[] | number[] | boolean[]
+  properties?: {
+    [key: string]: JSONSchemaObject
+  }
+  items?: JSONSchemaObject
 }
 
 export type SwaggerOperationObject = {
@@ -151,13 +153,13 @@ export type SwaggerOperationObject = {
 
 export type SwaggerResponseObject = {
   description?: string
-  schema?: SwaggerSchemaObject | SwaggerReference
+  schema?: SwaggerSchemaObject | SwaggerReference | JSONSchemaObject
   headers?: SwaggerHeadersObject
   examples?: SwaggerExamplesObject
 }
 
 export type SwaggerResponses = {
-    [statusCode: string | number]: SwaggerReference | SwaggerResponseObject
+    [statusCode in string | number]: SwaggerReference | SwaggerResponseObject
 }
 
 export type SwaggerHeadersObject = {
