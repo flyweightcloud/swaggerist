@@ -2,6 +2,7 @@ import * as SwaggerParser from "@apidevtools/swagger-parser"
 import { OpenAPI } from "openapi-types"
 
 import Swaggerist, { buildBodyParams, buildPathParams, buildSchema, Responses, SwaggerSecuritySchemes } from "../src/index"
+import { quickSchema } from "../src/quick_schema"
 
 const testSwaggerOptions = {
     info: {
@@ -23,13 +24,13 @@ describe("Basic swagger builder functionality", () => {
         swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
 
         swagger.addPath("/test/{id}", {
-            get: {
+            post: {
                 operationId: "test",
                 parameters: [...buildPathParams({ id: { type: "string", description: "userId" }}), ...buildBodyParams("user", {userId: {type: "string", description: "userId"}})],
                 responses: {
-                    "200": Responses.Success(buildSchema({
-                        id: { type: "string", description: "The ID of the user" },
-                        name: { type: "string", description: "The name of the user" },
+                    "200": Responses.Success(quickSchema({
+                        id: 12345,
+                        name: "A Users Name"
                     })),
                 },
             },
@@ -45,9 +46,9 @@ describe("Basic swagger builder functionality", () => {
                 operationId: "test",
                 parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                 responses: {
-                    "200": Responses.Success(buildSchema({
-                        id: {type: "string", description: "The ID of the user"},
-                        name: {type: "string", description: "The name of the user"},
+                    "200": Responses.Success(quickSchema({
+                        id: 12345,
+                        name: "A Users Name"
                     })),
                 },
             },
@@ -59,10 +60,10 @@ describe("Basic swagger builder functionality", () => {
                     operationId: "test",
                     parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
                     responses: {
-                        "200": Responses.Success(buildSchema({
-                            id: {type: "string", description: "The ID of the user"},
-                            name: {type: "string", description: "The name of the user"},
-                        })),
+                      "200": Responses.Success(quickSchema({
+                          id: 12345,
+                          name: "A Users Name"
+                      })),
                     },
                 },
             })

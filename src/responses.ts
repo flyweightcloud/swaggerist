@@ -1,7 +1,7 @@
-import { SwaggerReference, SwaggerResponseObject, SwaggerSchemaObject } from ".";
+import { SwaggerReference, SwaggerResponseObject, SwaggerSchemaObject, JSONSchemaObject } from ".";
 
 export const Responses = {
-    Success: (schema: SwaggerSchemaObject | SwaggerReference, description?: string): SwaggerResponseObject => {
+    Success: (schema: SwaggerSchemaObject | JSONSchemaObject | SwaggerReference, description?: string): SwaggerResponseObject => {
         return {
             description: description ?? "Success",
             schema,

@@ -7,7 +7,8 @@
         "sourceMap": true,
         "strict": false,
         "declaration": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "resolveJsonModule": true
     },
     "include": ["src"],
     "exclude": [

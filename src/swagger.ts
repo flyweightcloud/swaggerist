@@ -103,21 +103,17 @@ export type SwaggerParameterObject = {
 }
 
 export type SwaggerSchemaObject = {
-    type?: string
     required?: string[]
-    properties?: {
-        [key: string]: SwaggerSchemaObject | SwaggerSchemaObjectProperties
-    }
-    items?: SwaggerSchemaObject
     definitions?: SwaggerDefinitions
-}
+    example?: object
+} & JSONSchemaObject
 
-export type SwaggerSchemaObjectProperties = {
+export type JSONSchemaObject = {
   type: string
   format?: string
   title?: string
   description?: string
-  default?: SwaggerSchemaObject
+  default?: JSONSchemaObject
   multipleOf?: number
   maximum?: number
   exclusiveMaximum?: number | boolean
@@ -131,8 +127,11 @@ export type SwaggerSchemaObjectProperties = {
   uniqueItems?: boolean
   maxProperties?: number
   minProperties?: number
-  properties?: SwaggerSchemaObject
   enum?: string[] | number[] | boolean[]
+  properties?: {
+    [key: string]: JSONSchemaObject
+  }
+  items?: JSONSchemaObject
 }
 
 export type SwaggerOperationObject = {
@@ -151,7 +150,7 @@ export type SwaggerOperationObject = {
 
 export type SwaggerResponseObject = {
   description?: string
-  schema?: SwaggerSchemaObject | SwaggerReference
+  schema?: SwaggerSchemaObject | SwaggerReference | JSONSchemaObject
   headers?: SwaggerHeadersObject
   examples?: SwaggerExamplesObject
 }

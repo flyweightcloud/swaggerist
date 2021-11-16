@@ -1,4 +1,4 @@
-import { DefaultSwagger, SwaggerSchemaObjectProperties } from "."
+import { DefaultSwagger, JSONSchemaObject } from "."
 import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerParameterTypes, SwaggerObject } from "./swagger"
 interface BuildPathParamsArgs {
   [key: string]: {
@@ -45,7 +45,7 @@ export const buildQueryParams = (params: BuildQueryParamsArgs): SwaggerParameter
 // Allow for a required flag on a parameter and then build on the schema
 // with the required string[]
 interface BuildSchemaArgs {
-  [key: string]: SwaggerSchemaObjectProperties & {required?: boolean}
+  [key: string]: JSONSchemaObject & {required?: boolean}
 }
 
 // Simply function to build a schema object
@@ -111,4 +111,47 @@ export interface SwaggeristBaseDefinition {
 export const buildStandardSwagger = (definition: SwaggeristBaseDefinition): SwaggerObject => {
     const swagger: SwaggerObject = Object.assign({}, DefaultSwagger, definition)
     return swagger
+}
+
+export const convertJsonToSchema = (json: any, opts:{includeExample?: boolean}={}): SwaggerSchemaObject => {
+  if (Array.isArray(json)) {
+    return {
+      type: "array",
+      items: convertJsonToSchema(json[0]),
+    }
+  }
+  if (typeof json === "object") {
+    const example = opts.includeExample ? json : false
+    const schema: SwaggerSchemaObject = {
+      type: "object",
+      properties: {},
+    }
+    if (example) {
+      schema.example = example
+    }
+    Object.keys(json).forEach(key => {
+      schema.properties[key] = convertJsonToSchema(json[key])
+    })
+    return schema
+  }
+  if (typeof json === "string") {
+    return {
+      type: "string",
+    }
+  }
+  if (typeof json === "number") {
+    const schema: SwaggerSchemaObject = {
+      type: "integer"
+    }
+    if (json.toString().indexOf(".") > -1) {
+      schema.format = "float"
+      schema.type = "number"
+    } else if (json < 2147483647 && json > -2147483647) {
+      schema.format = "int32"
+    } else {
+      schema.format = "int64"
+    }
+    return schema
+  }
+  throw new Error("Unsupported type: " + typeof json)
 }
