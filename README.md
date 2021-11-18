@@ -21,7 +21,7 @@ a schema based on it.
 Simple example of a Swagger definition for an authenticated Azure Function API:
 
 ```typescript
-import Swaggerist, { bodyParamBuilder, pathParamBuilder, Responses, schemaBuilder, SwaggerSecuritySchemes } from "../src"
+import Swaggerist, { bodyParamBuilder, pathParamBuilder, Responses, schemaBuilder, SwaggerSecuritySchemes } from "@flyweight.cloud/swaggerist"
 
 const swaggerDetails = {
     info: {
