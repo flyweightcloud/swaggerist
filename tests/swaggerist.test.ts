@@ -1,7 +1,7 @@
 import * as SwaggerParser from "@apidevtools/swagger-parser"
 import { OpenAPI } from "openapi-types"
 
-import Swaggerist, { bodyParamBuilder, buildPathParams, queryParamBuilder, Responses, schemaBuilder, SwaggerSecuritySchemes } from "../src/index"
+import Swaggerist, { bodyParamBuilder, pathParamBuilder, queryParamBuilder, Responses, schemaBuilder, SwaggerSecuritySchemes } from "../src/index"
 
 const testSwaggerOptions = {
     info: {
@@ -30,18 +30,16 @@ describe("An ideal world", () => {
     test("where swagger just works", async () => {
         const swagger = Swaggerist.create(testSwaggerOptions)
         swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
-        swagger.addPath("/user/find", {
-            get: {
-                operationId: "findUser",
-                parameters: [ ...queryParamBuilder(exampleQuery) ],
-                responses: {
-                    "200": Responses.Success(schemaBuilder(exampleResponse)),
-                    default: Responses.Error,
-                },
+        swagger.addRoute("get", "/user/find", {
+            operationId: "findUser",
+            parameters: [...queryParamBuilder(exampleQuery)],
+            responses: {
+                "200": Responses.Success(schemaBuilder(exampleResponse)),
+                default: Responses.Error,
             },
         })
 
-        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https"}) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 });
@@ -50,56 +48,76 @@ describe("An ideal world", () => {
 describe("Basic swagger builder functionality", () => {
     test("should just work", async () => {
         const swagger = Swaggerist.create(testSwaggerOptions)
-        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https"}) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
-    test("should allow us to add paths", async () => {
+    test("adding paths", async () => {
         const swagger = Swaggerist.create(testSwaggerOptions)
         swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
 
-        swagger.addPath("/test/{id}", {
-            post: {
-                operationId: "test",
-                parameters: [...buildPathParams({ id: { type: "string", description: "userId" }}), ...bodyParamBuilder("user", {userId: {type: "string", description: "userId"}})],
-                responses: {
-                    "200": Responses.Success(schemaBuilder({
-                        id: 12345,
-                        name: "A Users Name"
-                    })),
-                },
+        swagger.addRoute("post", "/test/{id}", {
+            operationId: "test",
+            parameters: [...pathParamBuilder({ id: "userId" }), ...bodyParamBuilder("user", { userId: { type: "string", description: "userId" } })],
+            responses: {
+                "200": Responses.Success(schemaBuilder({
+                    id: 12345,
+                    name: "A Users Name"
+                })),
             },
         })
-        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https"}) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
+        expect(true).toBe(true) // Swagger is valid if we get here
+    })
+
+    test("adding paths with multiple methods", async () => {
+        const swagger = Swaggerist.create(testSwaggerOptions)
+        swagger.addSecurityPolicy("oauth", SwaggerSecuritySchemes.MicrosoftOauth())
+
+        swagger.addRoute("post", "/test", {
+            responses: {
+                "200": Responses.Success(schemaBuilder({
+                    id: 12345,
+                    name: "A Users Name"
+                })),
+            },
+        })
+        swagger.addRoute("get", "/test", {
+            responses: {
+                "200": Responses.Success(schemaBuilder({
+                    id: 12345,
+                    name: "A Users Name"
+                })),
+            },
+        })
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
+        expect(swagger.swaggerDoc.paths["/test"]["get"]).toBeDefined()
+        expect(swagger.swaggerDoc.paths["/test"]["post"]).toBeDefined()
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
     test("Should throw errors on colliding operationIds", () => {
         const swagger = Swaggerist.create(testSwaggerOptions)
-        swagger.addPath("/test/{id}", {
-            get: {
+        swagger.addRoute("get", "/test/{id}", {
+            operationId: "test",
+            parameters: [...pathParamBuilder({ id: "userId" }) ],
+            responses: {
+                "200": Responses.Success(schemaBuilder({
+                    id: 12345,
+                    name: "A Users Name"
+                })),
+            },
+        })
+
+        try {
+            swagger.addRoute("get", "/test2/{id}", {
                 operationId: "test",
-                parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
+                parameters: [...pathParamBuilder({ id: "userId" }) ],
                 responses: {
                     "200": Responses.Success(schemaBuilder({
                         id: 12345,
                         name: "A Users Name"
                     })),
-                },
-            },
-        })
-
-        try {
-            swagger.addPath("/test2/{id}", {
-                get: {
-                    operationId: "test",
-                    parameters: [ ...buildPathParams({id: {type: "string", description: "userId"}}) ],
-                    responses: {
-                        "200": Responses.Success(schemaBuilder({
-                            id: 12345,
-                            name: "A Users Name"
-                        })),
-                    },
                 },
             })
         } catch (e) {

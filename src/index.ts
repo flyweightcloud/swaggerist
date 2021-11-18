@@ -1,5 +1,5 @@
 import { buildStandardSwagger, SwaggeristBaseDefinition } from "./builders"
-import { SecuritySchemeObject, SwaggerObject, SwaggerPathItemObject } from "./swagger"
+import { SecuritySchemeObject, SwaggerObject, SwaggerOperationObject, SwaggerPathItemObject } from "./swagger"
 import { traverseAndReplace } from "./utils"
 
 export * from "./swagger"
@@ -7,6 +7,10 @@ export * from "./security"
 export * from "./builders"
 export * from "./defaults"
 export * from "./responses"
+
+
+type HttpMethods = "get" | "post" | "put" | "delete" | "options" | "head" | "patch"
+type AddRouteReturnType = {method: HttpMethods, path: string }
 
 class BaseError extends Error {
     constructor(message: string) {
@@ -66,18 +70,44 @@ export default class Swaggerist {
         this.swaggerSecurityDefinitions.push(key)
     }
 
-    addPath(path: string, pathObject: SwaggerPathItemObject) {
-        const method = Object.keys(pathObject)[0]
-        const operationId = pathObject[method].operationId ?? this.getNextOperationId(`${method}_${path}`)
+    addRoute(method: HttpMethods, path: string, swaggerOp: SwaggerOperationObject): AddRouteReturnType {
+        const swaggerMethod = {[method]: swaggerOp} as SwaggerPathItemObject
+
+        this.swaggerDoc.paths = this.swaggerDoc.paths || {}
+
+        if (this.swaggerDoc.paths[path] && this.swaggerDoc.paths[path][method]) {
+            throw new Error("Path and method already exists")
+        }
+
+        const operationId = swaggerOp.operationId ?? this.getNextOperationId(`${method}_${path}`)
         if (this.swaggerOperationIds.includes(operationId)) {
             throw new DuplicateOperationIdError(operationId)
         }
-        this.swaggerDoc.paths = {
-            ...this.swaggerDoc.paths,
-            [path]: pathObject,
-        }
+
+        this.swaggerDoc.paths[path] = {...this.swaggerDoc.paths[path] || {}, ...swaggerMethod}
         this.swaggerOperationIds.push(operationId)
-        return this
+
+        return {method: method as HttpMethods, path}
+    }
+
+    get(path: string, swaggerOp: SwaggerOperationObject): AddRouteReturnType {
+        return this.addRoute("get", path, swaggerOp)
+    }
+
+    post(path: string, swaggerOp: SwaggerOperationObject): AddRouteReturnType {
+        return this.addRoute("post", path, swaggerOp)
+    }
+
+    put(path: string, swaggerOp: SwaggerOperationObject): AddRouteReturnType {
+        return this.addRoute("put", path, swaggerOp)
+    }
+
+    patch(path: string, swaggerOp: SwaggerOperationObject): AddRouteReturnType {
+        return this.addRoute("patch", path, swaggerOp)
+    }
+
+    delete(path: string, swaggerOp: SwaggerOperationObject): AddRouteReturnType {
+        return this.addRoute("delete", path, swaggerOp)
     }
 
     // TODO: allow for substitutions for things like $$HOST$$

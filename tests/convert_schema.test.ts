@@ -20,11 +20,11 @@ describe("Conversion of Json to a schema object", () => {
         const swaggerSchema = convertJsonToSchema(response, { includeExample: true }) as SwaggerSchemaObject
         expect(swaggerSchema).toStrictEqual(expected)
 
-        swagger.addPath("/weather", {
-            "get": { responses: { 200: Responses.Success(swaggerSchema) } }
+        swagger.addRoute("get", "/weather", {
+            responses: { 200: Responses.Success(swaggerSchema) }
         })
 
-        await SwaggerParser.validate(swagger.generate("2.0", { scheme: "https" }) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
@@ -33,23 +33,23 @@ describe("Conversion of Json to a schema object", () => {
 
         expect(swaggerSchema.example).toBeUndefined
 
-        swagger.addPath("/weather", {
-            "get": { responses: { 200: Responses.Success(swaggerSchema) } }
+        swagger.addRoute("get", "/weather2", {
+            responses: { 200: Responses.Success(swaggerSchema) }
         })
 
-        await SwaggerParser.validate(swagger.generate("2.0", { scheme: "https" }) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
 })
 
 describe("Building a schema object", () => {
-    test("should take a json example and output a schema with an example", async () => {
+    test("outputting a schema with an example", async () => {
         const swaggerSchema = convertJsonToSchema(response, { includeExample: true })
         expect(swaggerSchema).toStrictEqual(expected)
     });
 
-    test("should work and include an example", async () => {
+    test("overriding a field", async () => {
         const user = {
             name: "Customer Name",
             age: 24,
@@ -71,5 +71,19 @@ describe("Building a schema object", () => {
         // Should let us override any field with our own type and example
         expect(swaggerSchema.properties.address.properties.zip.type).toBe("string")
 
+    })
+
+    test("handling an array", async () => {
+        const user = [{
+            name: "Customer Name",
+            email: "customer@domain.com",
+        }]
+        const swaggerSchema = convertJsonToSchema(user, { includeExample: true })
+
+        // Should let us override any field with our own type and example
+        expect(swaggerSchema.type).toBe("array")
+        expect(swaggerSchema.items).toBeDefined()
+        expect(swaggerSchema.items.type).toBe("object")
+        expect(swaggerSchema.example).toStrictEqual(user)
     })
 })

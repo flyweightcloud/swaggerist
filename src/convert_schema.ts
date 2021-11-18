@@ -3,7 +3,7 @@ import { valToType } from "./value_typer"
 
 type QuickJSONSchema = JSONSchemaObject & { required?: boolean, example?: string | number | boolean }
 
-const extractExample = (val: object): object => {
+const extractExample = (val: object): object | object[] => {
     if (Array.isArray(val)) {
         return val.map(extractExample)
     }
@@ -53,10 +53,14 @@ const overrideSchema = (val: QuickJSONSchema): JSONSchemaObject => {
 export const convertJsonToSchema = (json: any, opts:{includeExample?: boolean}={}): SwaggerSchemaObject => {
     const includeExample = opts.includeExample ?? true
     if (Array.isArray(json)) {
-        return {
+        const schema: SwaggerSchemaObject = {
             type: "array",
             items: convertJsonToSchema(json[0], {includeExample: false}),
         }
+        if (includeExample) {
+            schema.example = extractExample(json)
+        }
+        return schema
     }
 
     if (typeof json === "object") {

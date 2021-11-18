@@ -71,7 +71,7 @@ export type SwaggerExternalDocumentation = {
 }
 
 export type SwaggerPath = {
-    [key: string]: SwaggerPathItemObject
+    [path: string]: SwaggerPathItemObject
 }
 
 type SwaggerPathItemObjectMethods = {
@@ -87,7 +87,7 @@ type SwaggerPathItemObjectMethods = {
 
 export type SwaggerPathItemObject = RequireAtLeastOne<SwaggerPathItemObjectMethods, "get" | "post" | "put" | "delete" | "options" | "head" | "patch">
 
-type SwaggerParameterInStrings = "query" | "header" | "path" | "cookie" | "body"
+export type SwaggerParameterInStrings = "query" | "header" | "path" | "cookie" | "body"
 export type SwaggerTypes = "integer" | "number" | "string" | "boolean" | "array" | "object" | "file"
 export type SwaggerFormats = "int64" | "int32" | "float" | "double" | "byte" | "binary" | "date" | "date-time" | "password"
 

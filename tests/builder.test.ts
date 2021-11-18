@@ -20,11 +20,11 @@ describe("Conversion of Json to a schema object", () => {
         const swaggerSchema = convertJsonToSchema(response, { includeExample: true })
         expect(swaggerSchema).toStrictEqual(expected)
 
-        swagger.addPath("/weather", {
-            "get": { responses: { 200: Responses.Success(swaggerSchema) } }
+        swagger.addRoute("get", "/weather", {
+            responses: { 200: Responses.Success(swaggerSchema) }
         })
 
-        await SwaggerParser.validate(swagger.generate("2.0", { scheme: "https" }) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 
@@ -33,11 +33,11 @@ describe("Conversion of Json to a schema object", () => {
 
         expect(swaggerSchema.example).toBeUndefined
 
-        swagger.addPath("/weather", {
-            "get": { responses: { 200: Responses.Success(swaggerSchema) } }
+        swagger.addRoute("get", "/current_weather", {
+            responses: { 200: Responses.Success(swaggerSchema) }
         })
 
-        await SwaggerParser.validate(swagger.generate("2.0", { scheme: "https" }) as object as OpenAPI.Document)
+        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
         expect(true).toBe(true) // Swagger is valid if we get here
     })
 

@@ -40,6 +40,6 @@ export const DefaultSwagger = {
     },
     schemes: ["$$SCHEME$$"],
     host: "$$HOST$$",
-    basePath: "/",
+    basePath: "$$BASE_PATH$$",
     paths: {},
 }

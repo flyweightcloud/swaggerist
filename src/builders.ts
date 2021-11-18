@@ -1,30 +1,16 @@
 import { DefaultSwagger } from "."
 import { convertJsonToParams } from "./convert_params"
 import { convertJsonToSchema } from "./convert_schema"
-import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerTypes, SwaggerObject } from "./swagger"
-interface BuildPathParamsArgs {
-  [key: string]: {
-    type: SwaggerTypes
-    description?: string
-  }
-}
+import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerObject } from "./swagger"
 
-export const buildPathParams = (params: BuildPathParamsArgs): SwaggerParameterObject[] => {
-    const results: SwaggerParameterObject[] = []
-    Object.keys(params).forEach(key => {
-        results.push({
-            in: "path",
-            name: key,
-            type: params[key].type,
-            required: true,
-        })
-    })
-    return results
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const pathParamBuilder = (paramsExample: any): SwaggerParameterObject[] => {
+    return convertJsonToParams("path", paramsExample)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const queryParamBuilder = (paramsExample: any): SwaggerParameterObject[] => {
-    return convertJsonToParams(paramsExample)
+    return convertJsonToParams("query", paramsExample)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
