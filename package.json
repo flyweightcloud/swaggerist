@@ -1,6 +1,6 @@
 {
   "name": "@flyweight.cloud/swaggerist",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Quickly build swagger definitions programatically",
   "homepage": "https://github.com/flyweightcloud/request",
   "main": "lib/index.js",
