@@ -1,7 +1,7 @@
 # Swaggerist
 
 [![Tests](https://github.com/flyweightcloud/swaggerist/actions/workflows/test.yml/badge.svg)](https://github.com/flyweightcloud/swaggerist/actions/workflows/test.yml)
-[![Docs](https://flyweightcloud.github.io/swaggerist)](https://img.shields.io/badge/Docs-Typedoc-brightgreen)
+[![Docs](https://img.shields.io/badge/Docs-Typedoc-brightgreen)](https://flyweightcloud.github.io/swaggerist/)
 
 Swaggerist is an opinionated and programmatic way to quickly build Swagger definitions
 for JSON API's. (Targetting Azure at the moment, so Swagger 2.0)
