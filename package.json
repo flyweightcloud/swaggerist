@@ -15,8 +15,7 @@
   },
   "author": "Mark Percival <m@mdp.im>",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.0.3",
     "@types/jest": "^27.0.2",
