@@ -4,3 +4,4 @@ node_modules
 lib
 # don't lint nyc coverage output
 tests/DemoFunc
+docs

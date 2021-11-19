@@ -2,7 +2,7 @@ name: Update docs
 
 on:
   push:
-    branches: [ main, docs ]
+    branches: [ main, docs_staging]
 
 jobs:
   docs:
