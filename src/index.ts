@@ -40,17 +40,42 @@ class DuplicateSecurityPolicyError extends BaseError {
     }
 }
 
+/**
+ * @class Swaggerist
+ * @description A class to build a swagger object
+ */
 export default class Swaggerist {
 
     swaggerDoc: SwaggerObject
     swaggerSecurityDefinitions: string[]
     swaggerOperationIds: string[]
 
-    // Give us an easy place to start
+    /**
+     * The static method to create a new instance of the class with sensible defaults
+     * 
+     * Example:
+     * ```
+     * const swagger = Swaggerist.create({
+     *  info: {
+     *    title: "My API",
+     *    description: "This is my API",
+     *    version: "1.0.0"
+     *  }
+     * })
+     * ```
+     *
+     */
     public static create(def: SwaggeristBaseDefinition): Swaggerist {
         return new Swaggerist(buildStandardSwagger(def))
     }
 
+    /**
+     * The constructor of the `Swaggerist` class.
+     * You probably want to use the static method [[default.create]] instead
+     * to create a new instance of the class.with sensible defaults
+     *
+     * @param {SwaggerObject} definition The swagger object to build based on the passed in definition
+     */
     constructor(definition: SwaggerObject) {
         this.swaggerDoc = definition
         this.swaggerOperationIds = []

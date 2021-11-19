@@ -1,0 +1,24 @@
+name: Update docs
+
+on:
+  push:
+    branches: [ main, docs ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install
+      - name: Generate docs
+        run: npm run docs:gen
+      - name: Commit docs
+        run: |
+          git config --global user.name 'Flyweight Doc Bot'
+          git config --global user.email 'mdp@users.noreply.github.com'
+          git commit -am "Updated with generated docs"
+          git push
