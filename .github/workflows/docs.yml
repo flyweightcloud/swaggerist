@@ -15,7 +15,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm install
       - name: Generate docs
-        run: npm run docs:gen
+        run: |
+          npm run docs:gen
+          touch docs/.nojekyll
       - name: Commit docs
         run: |
           git config --global user.name 'Flyweight Doc Bot'
