@@ -2,6 +2,7 @@ import { DefaultSwagger } from "."
 import { convertJsonToParams } from "./convert_params"
 import { convertJsonToSchema } from "./convert_schema"
 import { SwaggerParameterObject, SwaggerSchemaObject, SwaggerObject } from "./swagger"
+import { deepClone } from "./utils"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pathParamBuilder = (paramsExample: any): SwaggerParameterObject[] => {
@@ -50,6 +51,6 @@ export interface SwaggeristBaseDefinition {
 }
 
 export const buildStandardSwagger = (definition: SwaggeristBaseDefinition): SwaggerObject => {
-    const swagger: SwaggerObject = Object.assign({}, DefaultSwagger, definition)
+    const swagger: SwaggerObject = deepClone({}, DefaultSwagger, definition)
     return swagger
 }

@@ -1,3 +1,4 @@
+import * as v8 from "v8"
 // Traverses a tree of nodes of an object and replaces the values of the properties and keys
 // with the given values.
 // Example: findAndReplaceObject({host: "$$HOST$$"}, {host: "localhost"})
@@ -41,4 +42,13 @@ export const traverseAndReplace = (objSrc: any, replacements: {[key: string]: st
         replacementList.push([new RegExp(`\\$\\$${tag}\\$\\$`, "g"), replacements[key]])
     }
     return recursiveReplace(objSrc, replacementList, {})
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const deepClone = (target: any, ...sources: any[]) => {
+    for (let i = sources.length-1; i >=0; i--) {
+        const source = sources[i]
+        Object.assign(target, v8.deserialize(v8.serialize(source)))
+    }
+    return target
 }

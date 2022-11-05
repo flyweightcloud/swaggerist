@@ -1,4 +1,5 @@
 import { SwaggerParameterInStrings, SwaggerParameterObject } from "."
+import { deepClone } from "./utils"
 import { valToType } from "./value_typer"
 
 type QuickParamsSchema = {
@@ -20,7 +21,7 @@ export const convertJsonToParams = (paramIn: SwaggerParameterInStrings, json: Qu
         }
 
         if (typeof val === "object") {
-            Object.assign(param, val)
+            deepClone(param, val)
         } else {
             const {type, format} =  valToType(val)
             param.type = type
