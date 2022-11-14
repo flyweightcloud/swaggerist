@@ -51,6 +51,6 @@ export interface SwaggeristBaseDefinition {
 }
 
 export const buildStandardSwagger = (definition: SwaggeristBaseDefinition): SwaggerObject => {
-    const swagger: SwaggerObject = deepClone({}, DefaultSwagger, definition)
+    const swagger: SwaggerObject = deepClone({}, definition, DefaultSwagger)
     return swagger
 }

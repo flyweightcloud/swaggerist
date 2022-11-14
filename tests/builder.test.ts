@@ -23,9 +23,9 @@ describe("Conversion of Json to a schema object", () => {
         swagger.addRoute("get", "/weather", {
             responses: { 200: Responses.Success(swaggerSchema) }
         })
-
-        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
-        expect(true).toBe(true) // Swagger is valid if we get here
+        const swaggerDef = swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document
+        expect(swaggerDef.info.title).toBe("Test Swagger")
+        await SwaggerParser.validate(swaggerDef)
     })
 
     test("should work and allow you to not include an example", async () => {
@@ -37,8 +37,8 @@ describe("Conversion of Json to a schema object", () => {
             responses: { 200: Responses.Success(swaggerSchema) }
         })
 
-        await SwaggerParser.validate(swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document)
-        expect(true).toBe(true) // Swagger is valid if we get here
+        const swaggerDef = swagger.generate("2.0", {scheme:"https", base_path:"/api"}) as object as OpenAPI.Document
+        await SwaggerParser.validate(swaggerDef)
     })
 
 })
